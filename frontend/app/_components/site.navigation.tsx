@@ -7,6 +7,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { ThemeCustomizer } from "./theme-customizer.component";
+import Link from "next/link";
 
 export default function SiteNavigation({
   children,
@@ -16,9 +17,12 @@ export default function SiteNavigation({
   return (
     <div>
       <div className="flex border-b p-2 items-center">
-        <div className="scroll-m-20 text-2xl font-semibold tracking-tight">
-          SaaS🩻
-        </div>
+        <Link href="/">
+          <div className="scroll-m-20 text-2xl font-semibold tracking-tight">
+            SaaS🩻
+          </div>
+        </Link>
+
         <OrganizationSwitcher />
 
         <div className="grow"></div>

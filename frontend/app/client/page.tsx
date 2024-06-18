@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ping_client } from "../../lib/ping-client";
+
+async function ping_client(): Promise<number> {
+  return await fetch("http://localhost:3001/ping", {
+    credentials: "include",
+  }).then((res) => res.status);
+}
 
 export default function ClientPage() {
   const [responseCode, setResponseCode] = useState<number>();
