@@ -28,6 +28,9 @@ export default class ClerkJwtPayload {
   sub: string;
 
   @IsOptional()
+  act?: string;
+
+  @IsOptional()
   org_id?: string;
 
   @IsOptional()

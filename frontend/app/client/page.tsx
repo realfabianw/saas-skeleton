@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 async function ping_client(): Promise<number> {
-  return await fetch("http://localhost:3001/ping", {
+  return await fetch("http://localhost:3000/ping", {
     credentials: "include",
   }).then((res) => res.status);
 }
