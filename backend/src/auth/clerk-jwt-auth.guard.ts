@@ -26,9 +26,14 @@ export class ClerkJwtAuthGuard extends AuthGuard('jwt') {
     }
 
     const request = context.switchToHttp().getRequest();
+    const authorization = request.headers['authorization'];
+    if (authorization) {
+      this.logger.debug('Found JWT in headers');
+    }
     const sessionCookie = request.cookies['__session'];
-    // Use the value of sessionCookie as needed
-    this.logger.debug('Session cookie: ' + sessionCookie);
+    if (sessionCookie) {
+      this.logger.debug('Found JWT in cookies');
+    }
 
     return super.canActivate(context);
   }

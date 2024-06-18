@@ -27,6 +27,7 @@ export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
           }
           return data;
         },
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
 
       secretOrKeyProvider: passportJwtSecret({
@@ -47,7 +48,7 @@ export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns
    */
   async validate(payload: ClerkJwtPayload): Promise<ClerkJwtPayload> {
-    this.logger.debug(`Validating JWT payload: ${JSON.stringify(payload)}`);
+    this.logger.debug(`Payload: ${JSON.stringify(payload)}`);
     return payload;
   }
 }

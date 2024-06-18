@@ -5,6 +5,7 @@ import { cn } from "../lib/utils";
 import Providers from "./_components/layout.providers";
 import SiteNavigation from "./_components/site.navigation";
 import { SiteFooter } from "./_components/site.footer";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const font = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,12 +28,14 @@ export default function RootLayout({
           font.variable
         )}
       >
-        <Providers>
-          <SiteNavigation>
-            {children}
-            <SiteFooter />
-          </SiteNavigation>
-        </Providers>
+        <ClerkProvider>
+          <Providers>
+            <SiteNavigation>
+              {children}
+              <SiteFooter />
+            </SiteNavigation>
+          </Providers>
+        </ClerkProvider>
       </body>
     </html>
   );

@@ -1,7 +1,18 @@
+"use server";
+
+import { auth } from "@clerk/nextjs/server";
+
 async function ping_server(): Promise<number> {
+  const { getToken } = auth();
   return await fetch("http://localhost:3001/ping", {
-    credentials: "include",
-  }).then((res) => res.status);
+    headers: {
+      Authorization: `Bearer ${await getToken()}`,
+    },
+    // credentials: "include",
+  }).then((res) => {
+    console.log(res);
+    return res.status;
+  });
 }
 
 export default async function ServerPage() {
