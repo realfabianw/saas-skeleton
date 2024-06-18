@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { DM_Sans, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "../lib/utils";
-import { ThemeProvider } from "../providers/theme.provider";
 import Providers from "./_components/layout.providers";
 import SiteNavigation from "./_components/site.navigation";
 import { SiteFooter } from "./_components/site.footer";
