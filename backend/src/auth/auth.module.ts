@@ -4,6 +4,7 @@ import { ClerkJwtAuthGuard } from './clerk-jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersService } from '../users/users.service';
+import { OrganizationsService } from '../organizations/organizations.service';
 
 /**
  * The AuthModule is responsible for providing the JWT strategy and guard for authenticating Clerk JWTs.
@@ -16,6 +17,7 @@ import { UsersService } from '../users/users.service';
     { provide: 'APP_GUARD', useClass: ClerkJwtAuthGuard },
     AuthService,
     UsersService,
+    OrganizationsService,
   ],
 })
 export class AuthModule {}

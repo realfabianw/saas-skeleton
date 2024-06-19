@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { envValidationSchema } from './env-validation.schema';
 import { HttpLoggerMiddleware } from './http-logger.middleware';
 import { UsersModule } from './users/users.module';
+import { OrganizationsModule } from './organizations/organizations.module';
 
 @Module({
   imports: [
@@ -16,6 +17,8 @@ import { UsersModule } from './users/users.module';
     AuthModule,
 
     UsersModule,
+
+    OrganizationsModule,
   ],
   controllers: [AppController],
   providers: [],
