@@ -6,10 +6,13 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint"
+    "lint": "next lint",
+    "openapi-ts": "openapi-ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.1.5",
+    "@hey-api/client-fetch": "^0.1.5",
+    "@hey-api/openapi-ts": "^0.47.1",
     "@hookform/resolvers": "^3.6.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
