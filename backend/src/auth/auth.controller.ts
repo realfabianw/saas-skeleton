@@ -13,7 +13,7 @@ import { WebhookEvent } from '@clerk/clerk-sdk-node';
 import { ConfigService } from '@nestjs/config';
 import { Webhook } from 'svix';
 import { AuthService } from './auth.service';
-import { Public } from './auth.decorator';
+import { Public } from './decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {

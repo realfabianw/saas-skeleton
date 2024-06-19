@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ClerkJwtStrategy } from './clerk-jwt.strategy';
-import { ClerkJwtAuthGuard } from './clerk-jwt-auth.guard';
+import { ClerkJwtAuthGuard } from './guards/clerk-jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersService } from '../users/users.service';
 import { OrganizationsService } from '../organizations/organizations.service';
+import { PermissionsGuard } from './guards/permissions.guard';
+import { ClerkJwtStrategy } from './strategies/clerk-jwt.strategy';
 
 /**
  * The AuthModule is responsible for providing the JWT strategy and guard for authenticating Clerk JWTs.
@@ -15,6 +16,7 @@ import { OrganizationsService } from '../organizations/organizations.service';
   providers: [
     ClerkJwtStrategy,
     { provide: 'APP_GUARD', useClass: ClerkJwtAuthGuard },
+    { provide: 'APP_GUARD', useClass: PermissionsGuard },
     AuthService,
     UsersService,
     OrganizationsService,

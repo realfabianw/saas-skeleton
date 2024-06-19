@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
-import { Permission } from '../permission.enum';
-import { Role } from '../role.enum';
+import { Permission } from './permission.enum';
+import { Role } from './role.enum';
 
 /**
  * https://clerk.com/docs/backend-requests/resources/session-tokens

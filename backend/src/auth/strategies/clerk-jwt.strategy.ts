@@ -2,10 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import ClerkJwtPayload from './entites/clerk-jwt.payload';
 import { passportJwtSecret } from 'jwks-rsa';
-import { Permission } from './permission.enum';
-import { Role } from './role.enum';
+import ClerkJwtPayload from '../entites/clerk-jwt.payload';
+import { Permission } from '../entites/permission.enum';
+import { Role } from '../entites/role.enum';
 
 /**
  * The JWT strategy for authenticating Clerk JWTs.
@@ -14,7 +14,7 @@ import { Role } from './role.enum';
  */
 @Injectable()
 export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  private readonly logger = new Logger(ClerkJwtStrategy.name);
+  private static readonly logger = new Logger(ClerkJwtStrategy.name);
 
   constructor(private readonly configService: ConfigService) {
     super({
@@ -50,15 +50,19 @@ export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns
    */
   async validate(payload: ClerkJwtPayload): Promise<ClerkJwtPayload> {
-    if (payload.org_permissions.length === 0) {
-      // I've noticed that the permissions are not always included in the JWT payload.
-      this.logger.debug(
-        'No permissions found in JWT. Falling back to local role -> permissions mapping.',
-      );
-      payload.org_permissions = this.getPermissionsFromRole(payload.org_role);
-    }
+    try {
+      if (payload.org_permissions.length === 0) {
+        // I've noticed that the permissions are not always included in the JWT payload.
+        ClerkJwtStrategy.logger.debug(
+          'No permissions found in JWT. Falling back to local role -> permissions mapping.',
+        );
+        payload.org_permissions = ClerkJwtStrategy.getPermissionsFromRole(
+          payload.org_role,
+        );
+      }
+    } catch (error) {}
 
-    this.logger.debug(`Payload: ${JSON.stringify(payload)}`);
+    ClerkJwtStrategy.logger.debug(`Payload: ${JSON.stringify(payload)}`);
     return payload;
   }
 
@@ -66,7 +70,7 @@ export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * This function maps permissions to roles and returns them as fallback, if the JWT does not contain any permissions but the users role.
    * @param role
    */
-  private getPermissionsFromRole(role: Role): Permission[] {
+  private static getPermissionsFromRole(role: Role): Permission[] {
     switch (role) {
       case Role.admin:
         return [
