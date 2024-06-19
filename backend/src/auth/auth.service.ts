@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { Organization, User, WebhookEvent } from '@clerk/clerk-sdk-node';
+import {
+  Organization,
+  OrganizationMembership,
+  User,
+  WebhookEvent,
+} from '@clerk/clerk-sdk-node';
 import { OrganizationsService } from '../organizations/organizations.service';
+import { OrganizationMembershipsService } from '../organization-memberships/organization-memberships.service';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +16,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly organizationsService: OrganizationsService,
+    private readonly organizationMembershipsService: OrganizationMembershipsService,
   ) {}
 
   async handleClerkWebhookEvent(event: WebhookEvent) {
@@ -40,6 +47,21 @@ export class AuthService {
       case 'organization.deleted':
         this.organizationsService.remove(event.data.id);
         break;
+      case 'organizationMembership.created':
+        this.organizationMembershipsService.create(
+          OrganizationMembership.fromJSON(event.data),
+        );
+        break;
+      case 'organizationMembership.updated':
+        this.organizationMembershipsService.update(
+          event.data.id,
+          OrganizationMembership.fromJSON(event.data),
+        );
+        break;
+      case 'organizationMembership.deleted':
+        this.organizationMembershipsService.remove(event.data.id);
+        break;
+
       default:
         this.logger.log(
           'Unhandled Clerk Webhook Event: ' + JSON.stringify(event),

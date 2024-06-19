@@ -6,6 +6,7 @@ import { envValidationSchema } from './env-validation.schema';
 import { HttpLoggerMiddleware } from './http-logger.middleware';
 import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { OrganizationMembershipsModule } from './organization-memberships/organization-memberships.module';
 
 @Module({
   imports: [
@@ -13,12 +14,10 @@ import { OrganizationsModule } from './organizations/organizations.module';
       validationSchema: envValidationSchema,
       isGlobal: true,
     }),
-
     AuthModule,
-
     UsersModule,
-
     OrganizationsModule,
+    OrganizationMembershipsModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { OrganizationsService } from '../organizations/organizations.service';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { ClerkJwtStrategy } from './strategies/clerk-jwt.strategy';
+import { OrganizationMembershipsService } from '../organization-memberships/organization-memberships.service';
 
 /**
  * The AuthModule is responsible for providing the JWT strategy and guard for authenticating Clerk JWTs.
@@ -20,6 +21,7 @@ import { ClerkJwtStrategy } from './strategies/clerk-jwt.strategy';
     AuthService,
     UsersService,
     OrganizationsService,
+    OrganizationMembershipsService,
   ],
 })
 export class AuthModule {}
