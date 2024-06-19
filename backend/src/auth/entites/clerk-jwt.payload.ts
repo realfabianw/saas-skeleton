@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+import { Permission } from '../permission.enum';
+import { Role } from '../role.enum';
 
 /**
  * https://clerk.com/docs/backend-requests/resources/session-tokens
@@ -34,11 +36,11 @@ export default class ClerkJwtPayload {
   org_id?: string;
 
   @IsOptional()
-  org_permissions?: string[];
+  org_permissions?: Permission[];
 
   @IsOptional()
   org_slug?: string;
 
   @IsOptional()
-  org_role: string;
+  org_role: Role;
 }

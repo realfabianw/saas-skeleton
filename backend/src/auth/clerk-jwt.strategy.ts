@@ -4,6 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import ClerkJwtPayload from './entites/clerk-jwt.payload';
 import { passportJwtSecret } from 'jwks-rsa';
+import { Permission } from './permission.enum';
+import { Role } from './role.enum';
 
 /**
  * The JWT strategy for authenticating Clerk JWTs.
@@ -48,7 +50,40 @@ export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns
    */
   async validate(payload: ClerkJwtPayload): Promise<ClerkJwtPayload> {
+    if (payload.org_permissions.length === 0) {
+      // I've noticed that the permissions are not always included in the JWT payload.
+      this.logger.debug(
+        'No permissions found in JWT. Falling back to local role -> permissions mapping.',
+      );
+      payload.org_permissions = this.getPermissionsFromRole(payload.org_role);
+    }
+
     this.logger.debug(`Payload: ${JSON.stringify(payload)}`);
     return payload;
+  }
+
+  /**
+   * This function maps permissions to roles and returns them as fallback, if the JWT does not contain any permissions but the users role.
+   * @param role
+   */
+  private getPermissionsFromRole(role: Role): Permission[] {
+    switch (role) {
+      case Role.admin:
+        return [
+          Permission.domains_read,
+          Permission.domains_manage,
+          Permission.members_read,
+          Permission.members_manage,
+          Permission.organization_manage,
+          Permission.organization_delete,
+        ];
+      case Role.member:
+        return [Permission.members_read];
+      default:
+        this.logger.error(
+          `Role ${role} not found. Unable to retrieve permissions.`,
+        );
+        return [];
+    }
   }
 }
