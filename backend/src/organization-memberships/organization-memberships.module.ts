@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { OrganizationMembershipsService } from './organization-memberships.service';
-import { OrganizationMembershipsController } from './organization-memberships.controller';
 
 @Module({
-  controllers: [OrganizationMembershipsController],
+  controllers: [],
   providers: [OrganizationMembershipsService],
 })
 export class OrganizationMembershipsModule {}
