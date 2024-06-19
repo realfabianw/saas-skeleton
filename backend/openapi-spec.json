@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/ping": {
+      "get": {
+        "operationId": "AppController_ping",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Ping & Healthchecks"
+        ]
+      }
+    },
+    "/ping-authorized": {
+      "get": {
+        "operationId": "AppController_authorizedPing",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Ping & Healthchecks"
+        ]
+      }
+    },
+    "/clerk/sync": {
+      "post": {
+        "operationId": "ClerkController_clerkWebhookSync",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Clerk"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "SaaS Skeleton",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__session"
+      }
+    },
+    "schemas": {}
+  }
+}

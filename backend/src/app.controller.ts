@@ -2,7 +2,9 @@ import { Controller, Get, Logger, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RequiresPermissions } from './auth/decorators/permissions.decorator';
 import { Permission } from './auth/entites/permission.enum';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Ping & Healthchecks')
 @Controller()
 export class AppController {
   private readonly logger = new Logger(AppController.name);

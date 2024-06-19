@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import ngrok from '@ngrok/ngrok';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { writeFileSync } from 'fs';
 
 async function bootstrap() {
   const logger = new Logger('Main');
@@ -26,8 +28,22 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // OpenAPI (Swagger) Documentation
+  const config = new DocumentBuilder()
+    .setTitle('SaaS Skeleton')
+    .setVersion('1.0')
+    // .addBearerAuth({ type: 'oauth2', name: 'authorization' })
+    .addBearerAuth()
+    .addCookieAuth(configService.get('CLERK_SESSION_COOKIE_NAME'))
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  // Save OpenAPI (Swagger) specification to disk
+  writeFileSync('openapi-spec.json', JSON.stringify(document, null, 2));
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(configService.get('PORT'));
 
+  // NGROK Tunnel
   try {
     ngrok.authtoken(configService.get('NGROK_AUTH_TOKEN'));
     await ngrok

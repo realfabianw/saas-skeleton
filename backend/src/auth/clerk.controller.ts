@@ -12,16 +12,18 @@ import { Request } from 'express';
 import { WebhookEvent } from '@clerk/clerk-sdk-node';
 import { ConfigService } from '@nestjs/config';
 import { Webhook } from 'svix';
-import { AuthService } from './auth.service';
+import { ClerkService } from './clerk.service';
 import { Public } from './decorators/auth.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('auth')
-export class AuthController {
-  private readonly logger = new Logger(AuthController.name);
+@ApiTags('Clerk')
+@Controller('clerk')
+export class ClerkController {
+  private readonly logger = new Logger(ClerkController.name);
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly authService: AuthService,
+    private readonly authService: ClerkService,
   ) {}
 
   /**
@@ -30,7 +32,7 @@ export class AuthController {
    * @param request
    */
   @Public()
-  @Post('/clerk/sync')
+  @Post('/sync')
   async clerkWebhookSync(@Req() request: RawBodyRequest<Request>) {
     this.logger.debug('Received Clerk sync webhook');
     const webhookSecret = this.configService.get<string>(

@@ -10,8 +10,8 @@ import { OrganizationsService } from '../organizations/organizations.service';
 import { OrganizationMembershipsService } from '../organization-memberships/organization-memberships.service';
 
 @Injectable()
-export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
+export class ClerkService {
+  private readonly logger = new Logger(ClerkService.name);
 
   constructor(
     private readonly usersService: UsersService,
