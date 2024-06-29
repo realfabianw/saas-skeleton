@@ -15,4 +15,6 @@ export const envValidationSchema = Joi.object({
   NGROK_AUTH_TOKEN: Joi.string().required(),
 
   FRONTEND_URL: Joi.string().uri().required(),
+
+  POSTGRES_URL_PROD: Joi.string().uri().required(),
 });

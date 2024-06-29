@@ -6,6 +6,9 @@ import cookieParser from 'cookie-parser';
 import ngrok from '@ngrok/ngrok';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
 async function bootstrap() {
   const logger = new Logger('Main');
@@ -23,7 +26,7 @@ async function bootstrap() {
   // TODO: This CORS configuration is not secure and should be adjusted for production use
   app.enableCors({
     origin: configService.get('FRONTEND_URL'),
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: '*',
     allowedHeaders: '*',
     credentials: true,
   });
@@ -57,6 +60,19 @@ async function bootstrap() {
       );
   } catch (err) {
     logger.error(`Error opening ngrok tunnel: ${err}`);
+  }
+
+  // Database Migration
+  try {
+    const migrationClient = postgres(configService.get('POSTGRES_URL_PROD'));
+    await migrate(drizzle(migrationClient), {
+      migrationsFolder: './drizzle',
+      migrationsSchema: 'public',
+      migrationsTable: 'migrations',
+    });
+    logger.log('Database migrated successfully');
+  } catch (err) {
+    logger.error('Error migrating database', err);
   }
 }
 bootstrap();

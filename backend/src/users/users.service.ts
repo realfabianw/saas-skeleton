@@ -1,11 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { User } from '@clerk/clerk-sdk-node';
+import { DbUser } from './entities/user.schema';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { dbSchema } from 'src/drizzle/db.schema';
+import { takeUniqueOrThrow } from 'src/drizzle/drizzle.extensions';
 
 @Injectable()
 export class UsersService {
-  create(clerkUser: User) {
-    return 'This action adds a new user';
+  constructor(
+    @Inject('DB_PROD') private db: PostgresJsDatabase<typeof dbSchema>,
+  ) {}
+  async create(clerkUser: User): Promise<DbUser> {
+    return await this.db
+      .insert(dbSchema.users)
+      .values({
+        id: clerkUser.id,
+      })
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 
   findAll() {

@@ -1,7 +1,7 @@
 import { Controller, Get, Logger, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { RequiresPermissions } from './auth/decorators/permissions.decorator';
-import { Permission } from './auth/entites/permission.enum';
+import { OrgPermissions } from './auth/decorators/org-permissions.decorator';
+import { OrgPermission } from './auth/entites/org-permission.enum';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Ping & Healthchecks')
@@ -14,7 +14,7 @@ export class AppController {
     response.status(200).send();
   }
 
-  @RequiresPermissions(Permission.organization_manage)
+  @OrgPermissions(OrgPermission.organization_manage)
   @Get('ping-authorized')
   authorizedPing(@Req() request: Request, @Res() response: Response) {
     response.status(200).send();
