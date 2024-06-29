@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { OrganizationMembershipsModule } from './organization-memberships/organization-memberships.module';
 import { DrizzlePostgresModule } from '@knaadh/nestjs-drizzle-postgres';
-import { dbSchema } from './drizzle/db.schema';
+import * as dbSchema from 'src/drizzle/schema';
 
 @Module({
   imports: [

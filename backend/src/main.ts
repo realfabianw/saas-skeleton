@@ -70,7 +70,7 @@ async function bootstrap() {
       migrationsSchema: 'public',
       migrationsTable: 'migrations',
     });
-    logger.log('Database migrated successfully');
+    logger.log('Successfully migrated database');
   } catch (err) {
     logger.error('Error migrating database', err);
   }

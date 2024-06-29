@@ -26,7 +26,7 @@ export class PermissionsGuard implements CanActivate {
       .switchToHttp()
       .getRequest().user;
 
-    if (!jwtPayload.org_id) {
+    if (jwtPayload == null || jwtPayload.org_id == null) {
       // No organization ID found in the JWT payload. Permissions are not relevant,
       // therefore we can allow the request to continue without any more checks.
       this.logger.debug('No organization ID found in the JWT payload.');

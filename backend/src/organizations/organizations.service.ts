@@ -1,25 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Organization } from '@clerk/clerk-sdk-node';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { takeUniqueOrThrow } from '../drizzle/drizzle.extensions';
+import { eq } from 'drizzle-orm';
+import * as dbSchema from 'src/drizzle/schema';
+import { DbOrganization } from 'src/drizzle/schema';
 
 @Injectable()
 export class OrganizationsService {
-  create(clerkOrganization: Organization) {
-    return 'This action adds a new organization';
+  constructor(
+    @Inject('DB_PROD') private db: PostgresJsDatabase<typeof dbSchema>,
+  ) {}
+
+  async create(clerkOrganization: Organization): Promise<DbOrganization> {
+    return await this.db
+      .insert(dbSchema.organizations)
+      .values(clerkOrganization)
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 
-  findAll() {
-    return `This action returns all organizations`;
+  async findAll(): Promise<DbOrganization[]> {
+    return await this.db.select().from(dbSchema.organizations);
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} organization`;
+  async findOne(id: string): Promise<DbOrganization> {
+    return await this.db.query.organizations.findFirst({
+      where: eq(dbSchema.organizations.id, id),
+    });
   }
 
-  update(id: string, clerkOrganization: Organization) {
-    return `This action updates a #${id} organization`;
+  async update(
+    id: string,
+    clerkOrganization: Organization,
+  ): Promise<DbOrganization> {
+    return await this.db
+      .update(dbSchema.organizations)
+      .set(clerkOrganization)
+      .where(eq(dbSchema.organizations.id, id))
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} organization`;
+  async remove(id: string): Promise<DbOrganization> {
+    return this.db
+      .delete(dbSchema.organizations)
+      .where(eq(dbSchema.organizations.id, id))
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 }

@@ -1,24 +1,28 @@
-import { Injectable, Req, Scope } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { Request } from 'express';
 import ClerkJwtPayload from './entites/clerk-jwt.payload';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable({ scope: Scope.REQUEST })
 export class RequestContextProvider {
-  constructor(@Req() private readonly request: Request) {}
+  constructor(@Inject(REQUEST) private readonly request: Request) {}
 
-  public getJwtPayload(): ClerkJwtPayload {
+  getRequest(): Request {
+    return this.request;
+  }
+  getJwtPayload(): ClerkJwtPayload {
     return this.request['user'];
   }
 
-  public getUserId(): string {
+  getUserId(): string {
     return this.getJwtPayload().sub;
   }
 
-  public getOrganizationId(): string {
+  getOrganizationId(): string {
     return this.getJwtPayload().org_id;
   }
 
-  public getOrgPermissions(): string[] {
+  getOrgPermissions(): string[] {
     return this.getJwtPayload().org_permissions;
   }
 }

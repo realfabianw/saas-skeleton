@@ -1,39 +1,46 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { User } from '@clerk/clerk-sdk-node';
-import { DbUser } from './entities/user.schema';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { dbSchema } from 'src/drizzle/db.schema';
 import { takeUniqueOrThrow } from 'src/drizzle/drizzle.extensions';
+import { eq } from 'drizzle-orm';
+import * as dbSchema from 'src/drizzle/schema';
+import { DbUser } from 'src/drizzle/schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject('DB_PROD') private db: PostgresJsDatabase<typeof dbSchema>,
   ) {}
+
   async create(clerkUser: User): Promise<DbUser> {
     return await this.db
       .insert(dbSchema.users)
-      .values({
-        id: clerkUser.id,
-      })
+      .values(clerkUser)
       .returning()
       .then(takeUniqueOrThrow);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<dbSchema.DbUser[]> {
+    return await this.db.select().from(dbSchema.users);
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<DbUser> {
+    return await this.db.query.users.findFirst({
+      where: eq(dbSchema.users.id, id),
+    });
   }
 
-  update(id: string, user: User) {
-    return `This action updates a #${id} user`;
+  async update(id: string, user: User): Promise<DbUser> {
+    return await this.db
+      .update(dbSchema.users)
+      .set(user)
+      .where(eq(dbSchema.users.id, id))
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<void> {
+    await this.db.delete(dbSchema.users).where(eq(dbSchema.users.id, id));
   }
 }
