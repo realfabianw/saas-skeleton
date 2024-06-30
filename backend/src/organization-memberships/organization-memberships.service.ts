@@ -20,7 +20,7 @@ export class OrganizationMembershipsService {
       .insert(dbSchema.organizationMemberships)
       .values({
         organizationId: clerkOrganizationMembership.organization.id,
-        userId: clerkOrganizationMembership.id,
+        userId: clerkOrganizationMembership.publicUserData.userId,
         role: ParseOrgRole(clerkOrganizationMembership.role),
       })
       .returning()
