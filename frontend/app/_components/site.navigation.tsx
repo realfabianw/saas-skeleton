@@ -16,7 +16,7 @@ export default function SiteNavigation({
 }>) {
   return (
     <div>
-      <div className="flex border-b p-2 items-center">
+      <div className="flex border-b p-2 items-center gap-2">
         <Link href="/">
           <div className="scroll-m-20 text-2xl font-semibold tracking-tight">
             SaaS🩻
