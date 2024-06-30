@@ -34,7 +34,6 @@ export class ClerkController {
   @Public()
   @Post('/sync')
   async clerkWebhookSync(@Req() request: RawBodyRequest<Request>) {
-    this.logger.debug('Received Clerk sync webhook');
     const webhookSecret = this.configService.get<string>(
       'CLERK_WEBHOOK_SECRET',
     );
@@ -58,6 +57,7 @@ export class ClerkController {
         request.rawBody.toString('utf8'),
         request.headers as Record<string, string>,
       ) as WebhookEvent;
+      this.logger.debug('Received Clerk Webhook event: ', webhookEvent.type);
       this.authService.handleClerkWebhookEvent(webhookEvent);
     } catch (err) {
       throw new UnauthorizedException('Clerk Webhook verification failed');
