@@ -4,8 +4,7 @@ import { User } from '@clerk/clerk-sdk-node';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { takeUniqueOrThrow } from 'src/drizzle/drizzle.extensions';
 import { eq } from 'drizzle-orm';
-import * as dbSchema from 'src/drizzle/schema';
-import { DbUser } from 'src/drizzle/schema';
+import { DbUser, dbSchema } from '../drizzle/schema';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +20,7 @@ export class UsersService {
       .then(takeUniqueOrThrow);
   }
 
-  async findAll(): Promise<dbSchema.DbUser[]> {
+  async findAll(): Promise<DbUser[]> {
     return await this.db.select().from(dbSchema.users);
   }
 

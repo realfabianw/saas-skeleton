@@ -4,8 +4,7 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { ParseOrgRole } from '../auth/entites/org-role.enum';
 import { takeUniqueOrThrow } from '../drizzle/drizzle.extensions';
 import { eq } from 'drizzle-orm';
-import * as dbSchema from 'src/drizzle/schema';
-import { DbOrganizationMembership } from 'src/drizzle/schema';
+import { DbOrganizationMembership, dbSchema } from '../drizzle/schema';
 
 @Injectable()
 export class OrganizationMembershipsService {

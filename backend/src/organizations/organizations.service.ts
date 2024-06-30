@@ -3,8 +3,7 @@ import { Organization } from '@clerk/clerk-sdk-node';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { takeUniqueOrThrow } from '../drizzle/drizzle.extensions';
 import { eq } from 'drizzle-orm';
-import * as dbSchema from 'src/drizzle/schema';
-import { DbOrganization } from 'src/drizzle/schema';
+import { DbOrganization, dbSchema } from '../drizzle/schema';
 
 @Injectable()
 export class OrganizationsService {
