@@ -1,25 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationMembership } from '@clerk/clerk-sdk-node';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { ParseOrgRole } from '../auth/entites/org-role.enum';
+import { takeUniqueOrThrow } from '../drizzle/drizzle.extensions';
+import { eq } from 'drizzle-orm';
+import * as dbSchema from 'src/drizzle/schema';
+import { DbOrganizationMembership } from 'src/drizzle/schema';
 
 @Injectable()
 export class OrganizationMembershipsService {
-  create(clerkOrganizationMembership: OrganizationMembership) {
-    return 'This action adds a new organizationMembership';
+  constructor(
+    @Inject('DB_PROD') private db: PostgresJsDatabase<typeof dbSchema>,
+  ) {}
+
+  async create(
+    clerkOrganizationMembership: OrganizationMembership,
+  ): Promise<DbOrganizationMembership> {
+    return await this.db
+      .insert(dbSchema.organizationMemberships)
+      .values({
+        organizationId: clerkOrganizationMembership.organization.id,
+        userId: clerkOrganizationMembership.publicUserData.userId,
+        role: ParseOrgRole(clerkOrganizationMembership.role),
+      })
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 
-  findAll() {
-    return `This action returns all organizationMemberships`;
+  async findAll(): Promise<DbOrganizationMembership[]> {
+    return await this.db.select().from(dbSchema.organizationMemberships);
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} organizationMembership`;
+  async findOne(id: string): Promise<DbOrganizationMembership> {
+    return await this.db.query.organizationMemberships.findFirst({
+      where: eq(dbSchema.organizationMemberships.userId, id),
+    });
   }
 
-  update(id: string, clerkOrganizationMembership: OrganizationMembership) {
-    return `This action updates a #${id} organizationMembership`;
+  async update(
+    id: string,
+    clerkOrganizationMembership: OrganizationMembership,
+  ): Promise<DbOrganizationMembership> {
+    return await this.db
+      .update(dbSchema.organizationMemberships)
+      .set({
+        organizationId: clerkOrganizationMembership.organization.id,
+        userId: clerkOrganizationMembership.id,
+        role: ParseOrgRole(clerkOrganizationMembership.role),
+      })
+      .where(eq(dbSchema.organizationMemberships.userId, id))
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} organizationMembership`;
+  async remove(id: string): Promise<DbOrganizationMembership> {
+    return this.db
+      .delete(dbSchema.organizationMemberships)
+      .where(eq(dbSchema.organizationMemberships.userId, id))
+      .returning()
+      .then(takeUniqueOrThrow);
   }
 }

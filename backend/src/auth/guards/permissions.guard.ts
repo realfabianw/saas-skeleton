@@ -4,8 +4,8 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { Permission } from '../entites/permission.enum';
-import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
+import { OrgPermission } from '../entites/org-permission.enum';
+import { PERMISSIONS_KEY } from '../decorators/org-permissions.decorator';
 import { Reflector } from '@nestjs/core';
 import ClerkJwtPayload from '../entites/clerk-jwt.payload';
 
@@ -16,22 +16,31 @@ export class PermissionsGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredPermissions: Permission[] = this.reflector.getAllAndOverride<
-      Permission[]
-    >(PERMISSIONS_KEY, [context.getHandler(), context.getClass()]);
-
-    if (!requiredPermissions) {
-      // Authenticate the request if no permission is required.
-      return true;
-    } else {
-      this.logger.debug(
-        'Required permissions: ' + JSON.stringify(requiredPermissions),
-      );
-    }
+    const requiredPermissions: OrgPermission[] =
+      this.reflector.getAllAndOverride<OrgPermission[]>(PERMISSIONS_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ]);
 
     const jwtPayload: ClerkJwtPayload = context
       .switchToHttp()
       .getRequest().user;
+
+    if (jwtPayload == null || jwtPayload.org_id == null) {
+      // No organization ID found in the JWT payload. Permissions are not relevant,
+      // therefore we can allow the request to continue without any more checks.
+      this.logger.debug('No organization ID found in the JWT payload.');
+      return true;
+    }
+
+    if (!requiredPermissions) {
+      // Authenticate the request if no permission is required.
+      return true;
+    }
+
+    this.logger.debug(
+      'Required permissions: ' + JSON.stringify(requiredPermissions),
+    );
 
     const requestPermissions = [];
 

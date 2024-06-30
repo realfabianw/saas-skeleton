@@ -4,8 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 import ClerkJwtPayload from '../entites/clerk-jwt.payload';
-import { Permission } from '../entites/permission.enum';
-import { Role } from '../entites/role.enum';
+import { OrgPermission } from '../entites/org-permission.enum';
+import { OrgRole } from '../entites/org-role.enum';
 
 /**
  * The JWT strategy for authenticating Clerk JWTs.
@@ -70,19 +70,19 @@ export class ClerkJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * This function maps permissions to roles and returns them as fallback, if the JWT does not contain any permissions but the users role.
    * @param role
    */
-  private static getPermissionsFromRole(role: Role): Permission[] {
+  private static getPermissionsFromRole(role: OrgRole): OrgPermission[] {
     switch (role) {
-      case Role.admin:
+      case OrgRole.admin:
         return [
-          Permission.domains_read,
-          Permission.domains_manage,
-          Permission.members_read,
-          Permission.members_manage,
-          Permission.organization_manage,
-          Permission.organization_delete,
+          OrgPermission.domains_read,
+          OrgPermission.domains_manage,
+          OrgPermission.members_read,
+          OrgPermission.members_manage,
+          OrgPermission.organization_manage,
+          OrgPermission.organization_delete,
         ];
-      case Role.member:
-        return [Permission.members_read];
+      case OrgRole.member:
+        return [OrgPermission.members_read];
       default:
         this.logger.error(
           `Role ${role} not found. Unable to retrieve permissions.`,
