@@ -13,7 +13,7 @@ export * from '../users/entities/user.schema';
 export * from '../organizations/entities/organization.schema';
 export * from '../organization-memberships/entities/organization-membership.schema';
 
-export const dbSchema = {
+export const schema = {
   users,
   userRelations,
   organizations,

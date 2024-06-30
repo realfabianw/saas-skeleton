@@ -10,13 +10,13 @@ export class AppController {
   private readonly logger = new Logger(AppController.name);
 
   @Get('ping')
-  ping(@Req() request: Request, @Res() response: Response) {
+  async ping(@Req() request: Request, @Res() response: Response) {
     response.status(200).send();
   }
 
   @OrgPermissions(OrgPermission.organization_manage)
   @Get('ping-authorized')
-  authorizedPing(@Req() request: Request, @Res() response: Response) {
+  async authorizedPing(@Req() request: Request, @Res() response: Response) {
     response.status(200).send();
   }
 }

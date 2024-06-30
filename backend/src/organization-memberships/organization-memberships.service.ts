@@ -4,19 +4,19 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { ParseOrgRole } from '../auth/entites/org-role.enum';
 import { takeUniqueOrThrow } from '../drizzle/drizzle.extensions';
 import { eq } from 'drizzle-orm';
-import { DbOrganizationMembership, dbSchema } from '../drizzle/schema';
+import { DbOrganizationMembership, schema } from '../drizzle/schema';
 
 @Injectable()
 export class OrganizationMembershipsService {
   constructor(
-    @Inject('DB_PROD') private db: PostgresJsDatabase<typeof dbSchema>,
+    @Inject('DB_PROD') private db: PostgresJsDatabase<typeof schema>,
   ) {}
 
   async create(
     clerkOrganizationMembership: OrganizationMembership,
   ): Promise<DbOrganizationMembership> {
     return await this.db
-      .insert(dbSchema.organizationMemberships)
+      .insert(schema.organizationMemberships)
       .values({
         organizationId: clerkOrganizationMembership.organization.id,
         userId: clerkOrganizationMembership.publicUserData.userId,
@@ -27,12 +27,12 @@ export class OrganizationMembershipsService {
   }
 
   async findAll(): Promise<DbOrganizationMembership[]> {
-    return await this.db.select().from(dbSchema.organizationMemberships);
+    return await this.db.select().from(schema.organizationMemberships);
   }
 
   async findOne(id: string): Promise<DbOrganizationMembership> {
     return await this.db.query.organizationMemberships.findFirst({
-      where: eq(dbSchema.organizationMemberships.userId, id),
+      where: eq(schema.organizationMemberships.userId, id),
     });
   }
 
@@ -41,21 +41,21 @@ export class OrganizationMembershipsService {
     clerkOrganizationMembership: OrganizationMembership,
   ): Promise<DbOrganizationMembership> {
     return await this.db
-      .update(dbSchema.organizationMemberships)
+      .update(schema.organizationMemberships)
       .set({
         organizationId: clerkOrganizationMembership.organization.id,
         userId: clerkOrganizationMembership.id,
         role: ParseOrgRole(clerkOrganizationMembership.role),
       })
-      .where(eq(dbSchema.organizationMemberships.userId, id))
+      .where(eq(schema.organizationMemberships.userId, id))
       .returning()
       .then(takeUniqueOrThrow);
   }
 
   async remove(id: string): Promise<DbOrganizationMembership> {
     return this.db
-      .delete(dbSchema.organizationMemberships)
-      .where(eq(dbSchema.organizationMemberships.userId, id))
+      .delete(schema.organizationMemberships)
+      .where(eq(schema.organizationMemberships.userId, id))
       .returning()
       .then(takeUniqueOrThrow);
   }

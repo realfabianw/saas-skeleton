@@ -75,4 +75,5 @@ async function bootstrap() {
     logger.error('Error migrating database', err);
   }
 }
+
 bootstrap();

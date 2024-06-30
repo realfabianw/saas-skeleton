@@ -8,7 +8,7 @@ import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { OrganizationMembershipsModule } from './organization-memberships/organization-memberships.module';
 import { DrizzlePostgresModule } from '@knaadh/nestjs-drizzle-postgres';
-import * as dbSchema from 'src/drizzle/schema';
+import { schema } from './drizzle/schema';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import * as dbSchema from 'src/drizzle/schema';
           url: configService.get<string>('POSTGRES_URL_PROD'),
         },
         config: {
-          schema: dbSchema,
+          schema: schema,
         },
       }),
     }),
