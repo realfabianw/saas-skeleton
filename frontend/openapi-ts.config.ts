@@ -8,4 +8,5 @@ export default defineConfig({
   client: "@hey-api/client-fetch",
   input: "../backend/openapi-spec.json",
   output: "lib/api",
+  plugins: ["@tanstack/react-query"],
 });

@@ -1,3 +1,14 @@
+# SaaS-Skeleton Frontend
+
+- Next.js
+- React Query
+- Hey-API w/ React Query Client Generation
+- TODO: T3.env
+- TODO: Lucia Auth
+-
+
+# Default Next.js Readme
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
