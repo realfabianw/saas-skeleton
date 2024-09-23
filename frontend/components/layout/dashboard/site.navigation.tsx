@@ -6,7 +6,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import { ThemeCustomizer } from "./theme-customizer.component";
+import { ThemeModeToggle } from "../theme-mode-toggle";
 import Link from "next/link";
 
 export default function SiteNavigation({
@@ -27,7 +27,7 @@ export default function SiteNavigation({
 
         <div className="grow"></div>
 
-        <ThemeCustomizer />
+        <ThemeModeToggle />
         <SignedOut>
           <SignInButton />
         </SignedOut>
